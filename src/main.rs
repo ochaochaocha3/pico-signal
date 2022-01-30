@@ -5,7 +5,6 @@
 
 use cortex_m_rt::entry;
 use defmt_rtt as _;
-use embedded_hal::digital::v2::OutputPin;
 use embedded_time::fixed_point::FixedPoint;
 use panic_probe as _;
 
@@ -19,6 +18,9 @@ use bsp::hal::{
 };
 
 use cortex_m::delay::Delay;
+
+mod driver;
+use driver::led::Led;
 
 #[entry]
 fn main() -> ! {
@@ -53,36 +55,36 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // 2. GPIOピンの変数宣言、出力ピンに設定
+    // 2. LEDの変数宣言
 
     // 緑色LED
-    let mut green_led_pin = pins.gpio13.into_push_pull_output();
+    let mut green_led = Led::new(pins.gpio13.into_push_pull_output());
     // 黄色LED
-    let mut yellow_led_pin = pins.gpio12.into_push_pull_output();
+    let mut yellow_led = Led::new(pins.gpio12.into_push_pull_output());
     // 赤色LED
-    let mut red_led_pin = pins.gpio11.into_push_pull_output();
+    let mut red_led = Led::new(pins.gpio11.into_push_pull_output());
 
     // 3. メインループ
     loop {
         // 青信号（5秒間）
         // 緑：点灯、黄：消灯、赤：消灯
-        red_led_pin.set_low().unwrap();
-        yellow_led_pin.set_low().unwrap();
-        green_led_pin.set_high().unwrap();
+        red_led.turn_off();
+        yellow_led.turn_off();
+        green_led.turn_on();
         delay_sec(&mut delay, 5);
 
         // 黄信号（2秒間）
         // 緑：消灯、黄：点灯、赤：消灯
-        green_led_pin.set_low().unwrap();
-        red_led_pin.set_low().unwrap();
-        yellow_led_pin.set_high().unwrap();
+        green_led.turn_off();
+        red_led.turn_off();
+        yellow_led.turn_on();
         delay_sec(&mut delay, 2);
 
         // 赤信号（3秒間）
         // 緑：消灯、黄：消灯、赤：点灯
-        yellow_led_pin.set_low().unwrap();
-        green_led_pin.set_low().unwrap();
-        red_led_pin.set_high().unwrap();
+        yellow_led.turn_off();
+        green_led.turn_on();
+        red_led.turn_off();
         delay_sec(&mut delay, 3);
     }
 }
