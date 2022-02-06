@@ -1,4 +1,4 @@
-//! LED信号機その1：GPIOピンの制御
+//! LED信号機その2：LEDの抽象化
 
 #![no_std]
 #![no_main]
@@ -47,7 +47,7 @@ fn main() -> ! {
     // ビジーウェイトの抽象化
     let mut delay = Delay::new(core.SYST, clocks.system_clock.freq().integer());
 
-    // 1. ピンの集合
+    // ピンの集合
     let pins = bsp::Pins::new(
         pac.IO_BANK0,
         pac.PADS_BANK0,
@@ -55,7 +55,7 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // 2. LEDの変数宣言
+    // 1. LEDの変数宣言
 
     // 緑色LED
     let mut green_led = Led::new(pins.gpio13.into_push_pull_output());
@@ -64,7 +64,7 @@ fn main() -> ! {
     // 赤色LED
     let mut red_led = Led::new(pins.gpio11.into_push_pull_output());
 
-    // 3. メインループ
+    // 2. メインループ
     loop {
         // 青信号（5秒間）
         // 緑：点灯、黄：消灯、赤：消灯
