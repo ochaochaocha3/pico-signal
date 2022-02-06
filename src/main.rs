@@ -83,8 +83,8 @@ fn main() -> ! {
         // 赤信号（3秒間）
         // 緑：消灯、黄：消灯、赤：点灯
         yellow_led.turn_off();
-        green_led.turn_on();
-        red_led.turn_off();
+        green_led.turn_off();
+        red_led.turn_on();
         delay_sec(&mut delay, 3);
     }
 }
