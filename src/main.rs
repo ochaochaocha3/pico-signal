@@ -22,6 +22,9 @@ use cortex_m::delay::Delay;
 mod driver;
 use driver::led::Led;
 
+mod traffic_signal;
+use traffic_signal::{Color, Light, TrafficSignal};
+
 #[entry]
 fn main() -> ! {
     // 変数宣言・初期設定
@@ -55,41 +58,43 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // 1. LEDの変数宣言
+    // 1. 変数宣言
 
     // 緑色LED
-    let mut green_led = Led::new(pins.gpio13.into_push_pull_output());
+    let green_led = Led::new(pins.gpio13.into_push_pull_output());
     // 黄色LED
-    let mut yellow_led = Led::new(pins.gpio12.into_push_pull_output());
+    let yellow_led = Led::new(pins.gpio12.into_push_pull_output());
     // 赤色LED
-    let mut red_led = Led::new(pins.gpio11.into_push_pull_output());
+    let red_led = Led::new(pins.gpio11.into_push_pull_output());
+
+    // 信号機
+    let mut signal = TrafficSignal::new(green_led, yellow_led, red_led);
+    // 信号機の点灯パターン
+    let light_pattern = [
+        Light {
+            color: Color::Green,
+            sec: 5,
+        },
+        Light {
+            color: Color::Yellow,
+            sec: 2,
+        },
+        Light {
+            color: Color::Red,
+            sec: 2,
+        },
+        Light {
+            color: Color::Yellow,
+            sec: 2,
+        },
+        Light {
+            color: Color::Red,
+            sec: 3,
+        },
+    ];
 
     // 2. メインループ
     loop {
-        // 青信号（5秒間）
-        // 緑：点灯、黄：消灯、赤：消灯
-        red_led.turn_off();
-        yellow_led.turn_off();
-        green_led.turn_on();
-        delay_sec(&mut delay, 5);
-
-        // 黄信号（2秒間）
-        // 緑：消灯、黄：点灯、赤：消灯
-        green_led.turn_off();
-        red_led.turn_off();
-        yellow_led.turn_on();
-        delay_sec(&mut delay, 2);
-
-        // 赤信号（3秒間）
-        // 緑：消灯、黄：消灯、赤：点灯
-        yellow_led.turn_off();
-        green_led.turn_off();
-        red_led.turn_on();
-        delay_sec(&mut delay, 3);
+        signal.run_cycle(&light_pattern, &mut delay);
     }
-}
-
-/// 指定された秒数だけビジーウェイトで待機する
-fn delay_sec(delay: &mut Delay, sec: u32) {
-    delay.delay_ms(sec * 1000);
 }
