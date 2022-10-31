@@ -13,15 +13,6 @@ where
     pin: T,
 }
 
-/// LEDの操作を表すトレイト
-pub trait LedController {
-    /// LEDを点灯させる
-    fn turn_on(&mut self);
-
-    /// LEDを消灯させる
-    fn turn_off(&mut self);
-}
-
 impl<T> Led<T>
 where
     T: OutputPin,
@@ -31,20 +22,14 @@ where
     pub fn new(pin: T) -> Self {
         Self { pin }
     }
-}
 
-impl<T> LedController for Led<T>
-where
-    T: OutputPin,
-    T::Error: Debug,
-{
     /// LEDを点灯させる
-    fn turn_on(&mut self) {
+    pub fn turn_on(&mut self) {
         self.pin.set_high().unwrap();
     }
 
     /// LEDを消灯させる
-    fn turn_off(&mut self) {
+    pub fn turn_off(&mut self) {
         self.pin.set_low().unwrap();
     }
 }

@@ -3,7 +3,7 @@ use core::fmt::Debug;
 use cortex_m::delay::Delay;
 use embedded_hal::digital::v2::OutputPin;
 
-use crate::driver::led::{Led, LedController};
+use crate::driver::led::Led;
 
 /// 信号の色を表す型
 #[derive(Debug, Clone, Copy)]
@@ -70,10 +70,7 @@ where
     pub fn run_cycle(&mut self, light_pattern: &[Light], delay: &mut Delay) {
         for l in light_pattern.into_iter() {
             self.turn_off_all_leds();
-
-            let led = self.color_to_led_mut(l.color);
-            led.turn_on();
-
+            self.turn_on(l.color);
             delay.delay_ms(l.sec * 1000);
         }
     }
@@ -85,12 +82,12 @@ where
         self.red_led.turn_off();
     }
 
-    /// 指定した色と対応するLEDの可変参照を返す
-    fn color_to_led_mut(&mut self, color: Color) -> &mut dyn LedController {
+    /// 指定した色のLEDを点灯させる
+    fn turn_on(&mut self, color: Color) {
         match color {
-            Color::Green => &mut self.green_led,
-            Color::Yellow => &mut self.yellow_led,
-            Color::Red => &mut self.red_led,
-        }
+            Color::Green => self.green_led.turn_on(),
+            Color::Yellow => self.yellow_led.turn_on(),
+            Color::Red => self.red_led.turn_on(),
+        };
     }
 }
