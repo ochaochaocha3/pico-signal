@@ -19,6 +19,7 @@ use bsp::hal::{
 
 use cortex_m::delay::Delay;
 
+// 1. モジュールの参照
 mod driver;
 use driver::led::Led;
 
@@ -55,7 +56,7 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // 1. LEDの変数宣言
+    // 2. LEDの変数宣言
 
     // 緑色LED
     let mut green_led = Led::new(pins.gpio13.into_push_pull_output());
@@ -64,7 +65,7 @@ fn main() -> ! {
     // 赤色LED
     let mut red_led = Led::new(pins.gpio11.into_push_pull_output());
 
-    // 2. メインループ
+    // 3. メインループ
     loop {
         // 青信号（5秒間）
         // 緑：点灯、黄：消灯、赤：消灯
