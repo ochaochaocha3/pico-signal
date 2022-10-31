@@ -81,14 +81,6 @@ fn main() -> ! {
         },
         Light {
             color: Color::Red,
-            sec: 2,
-        },
-        Light {
-            color: Color::Yellow,
-            sec: 2,
-        },
-        Light {
-            color: Color::Red,
             sec: 3,
         },
     ];
