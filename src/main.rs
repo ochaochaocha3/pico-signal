@@ -5,8 +5,6 @@
 
 use cortex_m_rt::entry;
 use defmt_rtt as _;
-use embedded_hal::digital::v2::OutputPin;
-use embedded_time::fixed_point::FixedPoint;
 use panic_probe as _;
 
 use rp_pico as bsp;
@@ -43,7 +41,7 @@ fn main() -> ! {
     .unwrap();
 
     // ビジーウェイトの抽象化
-    let mut delay = Delay::new(core.SYST, clocks.system_clock.freq().integer());
+    let mut delay = Delay::new(core.SYST, clocks.system_clock.freq().to_Hz());
 
     // 1. ピンの集合
     let pins = bsp::Pins::new(
