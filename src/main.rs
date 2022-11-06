@@ -3,7 +3,7 @@
 #![no_std]
 #![no_main]
 
-use cortex_m_rt::entry;
+use bsp::entry;
 use defmt_rtt as _;
 use panic_probe as _;
 
@@ -17,6 +17,7 @@ use bsp::hal::{
 };
 
 use cortex_m::delay::Delay;
+use embedded_hal::digital::v2::OutputPin;
 
 // 1. モジュールの参照
 mod driver;
