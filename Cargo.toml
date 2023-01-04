@@ -11,11 +11,11 @@ cortex-m-rt = "0.7"
 embedded-hal = { version = "0.2.5", features = ["unproven"] }
 
 defmt = "0.3"
-defmt-rtt = "0.3"
+defmt-rtt = "0.4"
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 
 # We're using a Pico by default on this template
-rp-pico = "0.5"
+rp-pico = "0.6"
 
 # cargo build/run
 [profile.dev]
