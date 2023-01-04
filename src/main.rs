@@ -3,11 +3,11 @@
 #![no_std]
 #![no_main]
 
+use rp_pico as bsp;
+
 use bsp::entry;
 use defmt_rtt as _;
 use panic_probe as _;
-
-use rp_pico as bsp;
 
 use bsp::hal::{
     clocks::{init_clocks_and_plls, Clock},
@@ -17,7 +17,6 @@ use bsp::hal::{
 };
 
 use cortex_m::delay::Delay;
-use embedded_hal::digital::v2::OutputPin;
 
 // 1. モジュールの参照
 mod driver;
